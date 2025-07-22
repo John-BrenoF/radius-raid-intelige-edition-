@@ -111,4 +111,4 @@ if ($.bombs) { /* ... */ }
 
 ## 🎬 Gameplay
 
-<video src="/radius-raid/video/gameplay.mp4" controls width="600"></video>
+<video src="video/gameplay.mp4" controls width="600"></video>
