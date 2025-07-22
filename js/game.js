@@ -1914,25 +1914,40 @@ window.addEventListener("load", function () {
 
 // Renderizar barra de slots no canto inferior central
 function renderSlotsBar() {
-  const slotCount = 3;
+  const slotCount = 4;
   const slotSize = 48;
   const slotPadding = 16;
+  const borderRadius = 10;
   const totalWidth = slotCount * slotSize + (slotCount - 1) * slotPadding;
   const xStart = $.cw / 2 - totalWidth / 2;
   const y = $.ch - slotSize - 18;
   for (let i = 0; i < slotCount; i++) {
     let x = xStart + i * (slotSize + slotPadding);
-    // Fundo do slot
+    // Fundo do slot (retângulo arredondado)
     $.ctxmg.save();
     $.ctxmg.globalAlpha = 0.85;
-    $.util.fillCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, slotSize / 2, '#222');
+    $.ctxmg.beginPath();
+    $.ctxmg.moveTo(x + borderRadius, y);
+    $.ctxmg.lineTo(x + slotSize - borderRadius, y);
+    $.ctxmg.quadraticCurveTo(x + slotSize, y, x + slotSize, y + borderRadius);
+    $.ctxmg.lineTo(x + slotSize, y + slotSize - borderRadius);
+    $.ctxmg.quadraticCurveTo(x + slotSize, y + slotSize, x + slotSize - borderRadius, y + slotSize);
+    $.ctxmg.lineTo(x + borderRadius, y + slotSize);
+    $.ctxmg.quadraticCurveTo(x, y + slotSize, x, y + slotSize - borderRadius);
+    $.ctxmg.lineTo(x, y + borderRadius);
+    $.ctxmg.quadraticCurveTo(x, y, x + borderRadius, y);
+    $.ctxmg.closePath();
+    $.ctxmg.fillStyle = '#222';
+    $.ctxmg.fill();
     $.ctxmg.globalAlpha = 1;
-    $.util.strokeCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, slotSize / 2, '#555', 3);
+    $.ctxmg.lineWidth = 3;
+    $.ctxmg.strokeStyle = '#555';
+    $.ctxmg.stroke();
     $.ctxmg.restore();
     // Conteúdo do slot 0: bombas
     if (i === 0) {
-      // Ícone da bomba
       $.ctxmg.save();
+      // Ícone da bomba
       $.util.fillCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, 14, '#888');
       $.util.strokeCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, 14, '#f00', 2);
       // Número de bombas
@@ -1985,5 +2000,7 @@ function renderSlotsBar() {
       $.ctxmg.fillText(heals, x + slotSize / 2, y + slotSize / 2 + 18);
       $.ctxmg.restore();
     }
+    // Slot 3 vazio
   }
 }
+
