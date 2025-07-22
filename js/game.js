@@ -1922,20 +1922,34 @@ function renderSlotsBar() {
   const y = $.ch - slotSize - 18;
   for (let i = 0; i < slotCount; i++) {
     let x = xStart + i * (slotSize + slotPadding);
-    // Fundo do slot
+    // Fundo do slot (quadrado com cantos levemente arredondados)
     $.ctxmg.save();
     $.ctxmg.globalAlpha = 0.85;
-    $.util.fillCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, slotSize / 2, '#222');
+    $.ctxmg.fillStyle = '#222';
+    $.ctxmg.strokeStyle = '#555';
+    $.ctxmg.lineWidth = 3;
+    // Retângulo com borda levemente arredondada
+    const radius = 8;
+    $.ctxmg.beginPath();
+    $.ctxmg.moveTo(x + radius, y);
+    $.ctxmg.lineTo(x + slotSize - radius, y);
+    $.ctxmg.quadraticCurveTo(x + slotSize, y, x + slotSize, y + radius);
+    $.ctxmg.lineTo(x + slotSize, y + slotSize - radius);
+    $.ctxmg.quadraticCurveTo(x + slotSize, y + slotSize, x + slotSize - radius, y + slotSize);
+    $.ctxmg.lineTo(x + radius, y + slotSize);
+    $.ctxmg.quadraticCurveTo(x, y + slotSize, x, y + slotSize - radius);
+    $.ctxmg.lineTo(x, y + radius);
+    $.ctxmg.quadraticCurveTo(x, y, x + radius, y);
+    $.ctxmg.closePath();
+    $.ctxmg.fill();
+    $.ctxmg.stroke();
     $.ctxmg.globalAlpha = 1;
-    $.util.strokeCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, slotSize / 2, '#555', 3);
     $.ctxmg.restore();
     // Conteúdo do slot 0: bombas
     if (i === 0) {
-      // Ícone da bomba
       $.ctxmg.save();
       $.util.fillCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, 14, '#888');
       $.util.strokeCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, 14, '#f00', 2);
-      // Número de bombas
       $.ctxmg.font = 'bold 20px Arial';
       $.ctxmg.fillStyle = '#fff';
       $.ctxmg.textAlign = 'center';
@@ -1947,12 +1961,10 @@ function renderSlotsBar() {
     // Conteúdo do slot 1: escudo
     if (i === 1) {
       $.ctxmg.save();
-      // Ícone de escudo
       $.util.strokeCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, 15, '#0ff', 3);
       $.ctxmg.globalAlpha = 0.7;
       $.util.fillCircle($.ctxmg, x + slotSize / 2, y + slotSize / 2, 13, '#0ff');
       $.ctxmg.globalAlpha = 1;
-      // Número de escudos
       $.ctxmg.font = 'bold 20px Arial';
       $.ctxmg.fillStyle = '#222';
       $.ctxmg.textAlign = 'center';
@@ -1964,7 +1976,6 @@ function renderSlotsBar() {
     // Conteúdo do slot 2: cura
     if (i === 2) {
       $.ctxmg.save();
-      // Ícone de coração (desenho simples)
       $.ctxmg.fillStyle = '#e33';
       $.ctxmg.beginPath();
       let cx = x + slotSize / 2, cy = y + slotSize / 2;
@@ -1976,7 +1987,6 @@ function renderSlotsBar() {
       $.ctxmg.strokeStyle = '#fff';
       $.ctxmg.lineWidth = 2;
       $.ctxmg.stroke();
-      // Número de curas
       $.ctxmg.font = 'bold 20px Arial';
       $.ctxmg.fillStyle = '#fff';
       $.ctxmg.textAlign = 'center';
