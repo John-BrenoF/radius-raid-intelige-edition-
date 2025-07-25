@@ -6,6 +6,9 @@
       name="description"
       content="Radius Raid is a space themed shoot 'em up where you must blast away unrelenting enemies before they destroy you. The game features 13 enemy types, 5 powerups, parallax backgrounds, retro sound effects, and locally stored stats."
     />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
     <link rel="shortcut icon" type="image/x-icon" href="images/favicon.ico" />
     <style>
       * {
@@ -15,12 +18,19 @@
 
       body {
         align-items: center;
-        background-color: #0d0d0d;
+        background-color: #000000e2;
         cursor: crosshair;
         display: flex;
         height: 100vh;
         justify-content: center;
         overflow: hidden;
+        touch-action: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
       }
 
       #wrap {
