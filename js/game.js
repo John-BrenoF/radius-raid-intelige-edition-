@@ -777,9 +777,12 @@ Events
 ==============================================================================*/
 $.mousemovecb = function (e) {
   e.preventDefault();
-  $.mouse.ax = e.pageX;
-  $.mouse.ay = e.pageY;
-  $.mousescreen();
+  // Em mobile, não atualizar posição do mouse automaticamente
+  if (!$.isMobile) {
+    $.mouse.ax = e.pageX;
+    $.mouse.ay = e.pageY;
+    $.mousescreen();
+  }
 };
 
 $.mousescreen = function () {
@@ -787,6 +790,12 @@ $.mousescreen = function () {
   $.mouse.sy = $.mouse.ay - $.cOffset.top;
   $.mouse.x = $.mouse.sx / $.gameScale - $.screen.x;
   $.mouse.y = $.mouse.sy / $.gameScale - $.screen.y;
+  
+  // Em mobile, garantir que o mouse não saia dos limites da tela
+  if ($.isMobile && $.state === "play") {
+    $.mouse.x = Math.max(0, Math.min($.ww, $.mouse.x));
+    $.mouse.y = Math.max(0, Math.min($.wh, $.mouse.y));
+  }
 };
 
 $.mousedowncb = function (e) {
@@ -802,9 +811,13 @@ $.touchstartcb = function (e) {
   e.preventDefault();
   if (e.touches.length > 0) {
     let touch = e.touches[0];
-    $.mouse.ax = touch.pageX;
-    $.mouse.ay = touch.pageY;
-    $.mousescreen();
+    // Em mobile, só atualizar posição do mouse se não for no joystick ou botões
+    let target = e.target;
+    if (!target.id || (!target.id.includes('joystick') && !target.id.includes('btn-'))) {
+      $.mouse.ax = touch.pageX;
+      $.mouse.ay = touch.pageY;
+      $.mousescreen();
+    }
     $.mouse.down = 1;
   }
 };
@@ -813,9 +826,13 @@ $.touchmovecb = function (e) {
   e.preventDefault();
   if (e.touches.length > 0) {
     let touch = e.touches[0];
-    $.mouse.ax = touch.pageX;
-    $.mouse.ay = touch.pageY;
-    $.mousescreen();
+    // Em mobile, só atualizar posição do mouse se não for no joystick ou botões
+    let target = e.target;
+    if (!target.id || (!target.id.includes('joystick') && !target.id.includes('btn-'))) {
+      $.mouse.ax = touch.pageX;
+      $.mouse.ay = touch.pageY;
+      $.mousescreen();
+    }
   }
 };
 
@@ -1062,10 +1079,17 @@ $.createMobileControls = function() {
     stick.style.left = (35+dx)+'px';
     stick.style.top = (35+dy)+'px';
     
-    // Simular movimento do mouse para direção (só durante o jogo)
+    // Em mobile, controlar diretamente a posição do mouse para o joystick
     if ($.state === "play" && $.hero) {
-      $.mouse.x = $.hero.x + dx*3;
-      $.mouse.y = $.hero.y + dy*3;
+      // Calcular posição absoluta do mouse baseada no joystick
+      let joystickRect = joystick.getBoundingClientRect();
+      let centerX = joystickRect.left + joystickRect.width / 2;
+      let centerY = joystickRect.top + joystickRect.height / 2;
+      
+      // Converter posição do joystick para posição do mouse
+      $.mouse.ax = centerX + dx * 2;
+      $.mouse.ay = centerY + dy * 2;
+      $.mousescreen();
     }
   };
   joystick.ontouchend = function(e){
